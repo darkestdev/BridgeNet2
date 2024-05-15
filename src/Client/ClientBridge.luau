@@ -259,7 +259,7 @@ function clientBridgePrototype:InvokeServerAsync(content: any)
 			return
 		end
 		if (reply :: {})[1] == ClientIdentifiers.ref("REQUEST", 3, false) and (reply :: {})[2] == id then
-			connection()
+			task.defer(connection)
 			task.spawn(thread, (reply :: {})[3])
 		end
 	end)
