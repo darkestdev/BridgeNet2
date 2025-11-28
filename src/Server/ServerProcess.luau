@@ -173,7 +173,22 @@ function ServerProcess.start()
 						end
 					end
 				else
-					dataRemoteEvent:FireClient(player, contentQueue)
+					local success, err = pcall(function()
+						dataRemoteEvent:FireClient(player, contentQueue)
+					end)
+
+					if not success then
+						warn("[Server] FireClient failed:", err)
+						warn("Player:", player, "ContentQueue:", contentQueue)
+						if type(contentQueue) == "table" then
+							warn(`[Content Queue Contents]:`)
+							for i, v in contentQueue do 
+								warn(`Key: {i}, Value: {v}`)
+							end 
+						end
+						-- optional: print a traceback
+						warn(debug.traceback(err, 2))
+					end
 				end
 
 				-- Clear every single player's content queue, as it was sent out this frame.
